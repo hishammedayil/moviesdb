@@ -18,6 +18,8 @@
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+
+    @yield('head-scripts')
 </head>
 <body>
     <div id="app">
@@ -85,5 +87,6 @@
                 console.log(e.message);
             });
     </script>
+    @yield('scripts')
 </body>
 </html>
