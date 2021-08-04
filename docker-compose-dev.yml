@@ -1,0 +1,27 @@
+version: "3"
+services:
+  web:
+    build:
+      context: ./php
+      dockerfile: Dockerfile
+    container_name: 'movies-web'
+    ports:
+      - "${HOST_PHP_PORT}:8000"
+      - "${HOST_WEBSOCKETS_PORT}:6001"
+    volumes:
+      - ${HOST_DOCUMENT_ROOT}:/var/www/html
+    restart: 'no'
+
+  db:
+    build: ./mariadb
+    container_name: 'movies-db'
+    restart: 'always'
+    command: --init-file /data/init.sql
+    ports:
+      - "${HOST_MARIADB_PORT}:3306"
+    volumes:
+      - ${MARIADB_DATA_DIR}:/var/lib/mysql
+      - ${MARIADB_LOG_DIR}:/var/log/mysql
+      - ./mariadb/init.sql:/data/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}

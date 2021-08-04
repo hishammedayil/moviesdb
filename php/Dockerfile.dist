@@ -1,0 +1,40 @@
+FROM php:8.0.8
+
+RUN apt-get update
+RUN apt-get -y install curl gnupg sudo libzip-dev unzip supervisor
+
+RUN docker-php-ext-install pdo_mysql
+
+RUN curl -sS https://getcomposer.org/installer | php && mv composer.phar /usr/local/bin/composer && chmod +x /usr/local/bin/composer
+
+RUN curl -sL https://deb.nodesource.com/setup_14.x  | bash -
+RUN apt-get -y install nodejs
+
+#RUN useradd -ms /bin/bash docker
+#RUN usermod -aG sudo docker
+#RUN usermod -aG www-data docker
+#RUN echo "docker ALL=NOPASSWD: ALL" > /etc/sudoers
+
+COPY ./php/services.conf /etc/supervisor/conf.d/services.conf
+
+COPY ./webroot/ /var/www/html
+
+#USER docker
+
+RUN composer --version
+
+RUN npm --version
+
+WORKDIR /var/www/html
+
+RUN cp .env.example .env
+RUN composer install
+RUN npm install
+RUN npm run dev
+
+EXPOSE 8000
+EXPOSE 6001
+
+#CMD php -S 0.0.0.0:8000
+#CMD composer install && npm install && npm run dev && php artisan serve --host=0.0.0.0 --port=8000
+CMD ["sudo", "/usr/bin/supervisord", "-n"]

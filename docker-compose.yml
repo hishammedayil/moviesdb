@@ -1,0 +1,25 @@
+version: "3"
+services:
+  webdist:
+    build:
+      context: .
+      dockerfile: ./php/Dockerfile.dist
+    container_name: 'movies-web-dist'
+    ports:
+      - "${HOST_PHP_PORT_DIST}:8000"
+      - "${HOST_WEBSOCKETS_PORT_DIST}:6001"
+    restart: 'no'
+
+  dbdist:
+    build: ./mariadb
+    container_name: 'movies-db-dist'
+    restart: 'always'
+    command: --init-file /data/init.sql
+    ports:
+      - "${HOST_MARIADB_PORT_DIST}:3306"
+    volumes:
+      - ${MARIADB_DATA_DIR_DIST}:/var/lib/mysql
+      - ${MARIADB_LOG_DIR_DIST}:/var/log/mysql
+      - ./mariadb/init.sql:/data/init.sql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD}
