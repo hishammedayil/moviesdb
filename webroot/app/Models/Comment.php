@@ -19,6 +19,7 @@ use Illuminate\Support\Carbon;
  * @property int $created_by_id
  * @property int $updated_by_id
  * @property Carbon|null $created_at
+ * @property string $posted_at
  * @property Carbon|null $updated_at
  * @property-read Movie $movie
  * @property-read User $user
@@ -46,6 +47,8 @@ class Comment extends Model
         'updated_by_id'
     ];
 
+    protected $appends = ['posted_at'];
+
     public function movie(): BelongsTo
     {
         return $this->belongsTo(Movie::class);
@@ -54,5 +57,10 @@ class Comment extends Model
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class, 'created_by_id', 'id');
+    }
+
+    public function getPostedAtAttribute(): string
+    {
+        return $this->created_at->format('D, jS M Y @ H:i:s');
     }
 }
