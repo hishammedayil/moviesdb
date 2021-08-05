@@ -4,33 +4,13 @@ declare(strict_types=1);
 
 namespace App\Services;
 
-use Faker\Provider\Image;
 use GuzzleHttp\Client;
-use GuzzleHttp\ClientInterface;
 use GuzzleHttp\Exception\GuzzleException;
 use GuzzleHttp\Utils;
-use Illuminate\Http\UploadedFile;
-//use Imgur;
-use Illuminate\Support\Facades\Http;
 use SplFileInfo;
-//use Yish\Imgur\Upload;
 
 class ImageUploadService
 {
-//    /**
-//     * @var Upload
-//     */
-//    private $imgur;
-//
-//    /**
-//     * FileUploadService constructor.
-//     * @param Upload $imgur
-//     */
-//    public function __construct(Upload $imgur)
-//    {
-//        $this->imgur = $imgur;
-//    }
-
     /**
      * @var Client
      */
@@ -74,6 +54,5 @@ class ImageUploadService
         $responseData = Utils::jsonDecode($response->getBody()->getContents());
 
         return $responseData->data->link;
-//        return $this->imgur->upload($file)->link();
     }
 }
